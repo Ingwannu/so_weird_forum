@@ -12,11 +12,15 @@ const helmet = require('helmet');
 const compression = require('compression');
 const path = require('path');
 const fs = require('fs').promises;
+const cors = require('cors');
 
 // 환경변수 로드
 require('dotenv').config();
 
 const app = express();
+
+// 프록시 신뢰 설정 (프테로닥틸 환경)
+app.set('trust proxy', true);
 
 // 포트 설정 - 프테로닥틸은 SERVER_PORT를 사용
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
@@ -64,9 +68,22 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"]
+      connectSrc: ["'self'", SITE_URL]
     },
   },
+}));
+
+// CORS 설정
+app.use(cors({
+  origin: function(origin, callback) {
+    // 같은 도메인이거나 설정된 SITE_URL인 경우 허용
+    if (!origin || origin === SITE_URL || origin.includes('119.202.156.3')) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+  credentials: true
 }));
 
 app.use(compression());
@@ -239,7 +256,18 @@ const checkRole = (minRole) => {
 };
 
 // 정적 파일 제공
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders: (res, path) => {
+    // CSS 파일에 대한 MIME 타입 명시
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+    // JavaScript 파일에 대한 MIME 타입 명시
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
 
 // API 라우트들
 
