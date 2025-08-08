@@ -20,7 +20,8 @@ const app = express();
 
 // 포트 설정 - 프테로닥틸은 SERVER_PORT를 사용
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
-const HOST = process.env.SERVER_IP || process.env.HOST || '0.0.0.0';
+// 프테로닥틸 환경에서는 항상 0.0.0.0으로 바인딩해야 함
+const HOST = '0.0.0.0';
 
 // 사이트 설정
 const SITE_URL = process.env.SITE_URL || `http://localhost:${PORT}`;
