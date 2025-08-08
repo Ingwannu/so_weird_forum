@@ -1,0 +1,9 @@
+node_modules/
+.env
+forum.db
+*.log
+.DS_Store
+dist/
+build/
+*.tmp
+*.temp

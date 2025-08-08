@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Forum - 프리미엄 포럼</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Mouse Glow Effect -->
+    <div class="mouse-glow"></div>
+    <div class="mouse-glow-trail"></div>
+    
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+        <p class="loading-text">Premium Forum</p>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="navbar glass-effect">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="nav-logo">
+                    <span class="logo-gradient">Premium Forum</span>
+                </a>
+                <div class="nav-links">
+                    <a href="/" class="nav-link active" data-page="home">
+                        <i class="fas fa-home"></i>
+                        <span>홈</span>
+                    </a>
+                    <div class="nav-dropdown">
+                        <button class="nav-link dropdown-toggle">
+                            <i class="fas fa-list"></i>
+                            <span>카테고리</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu glass-effect" id="categories-dropdown">
+                            <!-- Categories will be loaded here -->
+                        </div>
+                    </div>
+                    <a href="/search" class="nav-link" data-page="search">
+                        <i class="fas fa-search"></i>
+                        <span>검색</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <button class="theme-toggle glass-button" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <div class="nav-user" id="nav-user">
+                    <!-- User menu will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container" id="app">
+            <!-- Dynamic content will be loaded here -->
+        </div>
+    </main>
+    
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-backdrop" onclick="closeModal('login-modal')"></div>
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h2 class="modal-title">로그인</h2>
+                <button class="modal-close" onclick="closeModal('login-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form" class="modal-body">
+                <div class="form-group">
+                    <label for="login-email">이메일</label>
+                    <input type="email" id="login-email" class="form-input glass-input" required>
+                    <div class="input-glow"></div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">비밀번호</label>
+                    <input type="password" id="login-password" class="form-input glass-input" required>
+                    <div class="input-glow"></div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-gradient btn-block">
+                    <span>로그인</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>계정이 없으신가요? <a href="#" onclick="switchModal('login-modal', 'register-modal')">회원가입</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Register Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-backdrop" onclick="closeModal('register-modal')"></div>
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h2 class="modal-title">회원가입</h2>
+                <button class="modal-close" onclick="closeModal('register-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form" class="modal-body">
+                <div class="form-group">
+                    <label for="register-username">사용자명</label>
+                    <input type="text" id="register-username" class="form-input glass-input" required>
+                    <div class="input-glow"></div>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">이메일</label>
+                    <input type="email" id="register-email" class="form-input glass-input" required>
+                    <div class="input-glow"></div>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">비밀번호</label>
+                    <input type="password" id="register-password" class="form-input glass-input" required minlength="6">
+                    <div class="input-glow"></div>
+                    <small class="form-hint">비밀번호는 6자 이상이어야 합니다.</small>
+                </div>
+                <button type="submit" class="btn btn-primary btn-gradient btn-block">
+                    <span>회원가입</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>이미 계정이 있으신가요? <a href="#" onclick="switchModal('register-modal', 'login-modal')">로그인</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-backdrop" onclick="closeModal('settings-modal')"></div>
+        <div class="modal-content glass-effect modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">설정</h2>
+                <button class="modal-close" onclick="closeModal('settings-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3 class="settings-title">테마 설정</h3>
+                    <div class="theme-options">
+                        <label class="theme-option glass-card">
+                            <input type="radio" name="theme" value="light" id="theme-light">
+                            <div class="theme-preview theme-light-preview">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <span>라이트</span>
+                        </label>
+                        <label class="theme-option glass-card">
+                            <input type="radio" name="theme" value="dark" id="theme-dark">
+                            <div class="theme-preview theme-dark-preview">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <span>다크</span>
+                        </label>
+                        <label class="theme-option glass-card">
+                            <input type="radio" name="theme" value="ing" id="theme-ing">
+                            <div class="theme-preview theme-ing-preview">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <span>ING</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">커스텀 색상</h3>
+                    <div class="color-pickers">
+                        <div class="color-picker-group">
+                            <label for="primary-color">주 색상</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="primary-color" class="color-picker">
+                                <input type="text" id="primary-color-text" class="form-input glass-input color-text" placeholder="#6366f1">
+                            </div>
+                        </div>
+                        <div class="color-picker-group">
+                            <label for="secondary-color">보조 색상</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="secondary-color" class="color-picker">
+                                <input type="text" id="secondary-color-text" class="form-input glass-input color-text" placeholder="#8b5cf6">
+                            </div>
+                        </div>
+                        <div class="color-picker-group">
+                            <label for="accent-color">강조 색상</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="accent-color" class="color-picker">
+                                <input type="text" id="accent-color-text" class="form-input glass-input color-text" placeholder="#ec4899">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="resetColors()">
+                        <i class="fas fa-undo"></i>
+                        <span>기본 색상으로 재설정</span>
+                    </button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">프로필 설정</h3>
+                    <div class="profile-settings">
+                        <div class="form-group">
+                            <label for="profile-avatar">아바타 URL</label>
+                            <input type="url" id="profile-avatar" class="form-input glass-input" placeholder="https://example.com/avatar.jpg">
+                            <div class="input-glow"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-bio">자기소개</label>
+                            <textarea id="profile-bio" class="form-input glass-input" rows="4" placeholder="자신을 소개해주세요..."></textarea>
+                            <div class="input-glow"></div>
+                        </div>
+                        <button class="btn btn-primary btn-gradient" onclick="saveProfile()">
+                            <span>프로필 저장</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="settings-section danger-zone">
+                    <h3 class="settings-title">위험 구역</h3>
+                    <button class="btn btn-danger" onclick="confirmDeleteAccount()">
+                        <i class="fas fa-trash"></i>
+                        <span>계정 삭제</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Panel Modal -->
+    <div class="modal" id="admin-modal">
+        <div class="modal-backdrop" onclick="closeModal('admin-modal')"></div>
+        <div class="modal-content glass-effect modal-fullscreen">
+            <div class="modal-header">
+                <h2 class="modal-title">관리자 패널</h2>
+                <button class="modal-close" onclick="closeModal('admin-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="switchAdminTab('users')">
+                        <i class="fas fa-users"></i>
+                        <span>사용자 관리</span>
+                    </button>
+                    <button class="admin-tab" onclick="switchAdminTab('logs')">
+                        <i class="fas fa-history"></i>
+                        <span>관리 로그</span>
+                    </button>
+                    <button class="admin-tab" onclick="switchAdminTab('stats')">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>통계</span>
+                    </button>
+                </div>
+                <div class="admin-content" id="admin-content">
+                    <!-- Admin content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification Toast -->
+    <div class="toast-container" id="toast-container"></div>
+    
+    <!-- Notification Dropdown -->
+    <div class="notification-dropdown glass-effect" id="notification-dropdown">
+        <div class="notification-header">
+            <h3>알림</h3>
+            <button class="btn-text" onclick="markAllNotificationsRead()">모두 읽음</button>
+        </div>
+        <div class="notification-list" id="notification-list">
+            <!-- Notifications will be loaded here -->
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
