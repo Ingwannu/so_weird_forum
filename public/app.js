@@ -4,6 +4,9 @@ let currentTheme = localStorage.getItem('theme') || 'light';
 let categories = [];
 let currentPage = 'home';
 
+// API Base URL 설정
+const API_BASE_URL = window.location.origin;
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', async () => {
     // Apply saved theme
@@ -112,7 +115,7 @@ function cycleTheme() {
 // User Session Management
 async function loadUserSession() {
     try {
-        const response = await fetch('/api/auth/me');
+        const response = await fetch(`${API_BASE_URL}/api/auth/me`);
         if (response.ok) {
             const data = await response.json();
             currentUser = data.user;
@@ -201,7 +204,7 @@ function updateUserUI() {
 // Categories Management
 async function loadCategories() {
     try {
-        const response = await fetch('/api/categories');
+        const response = await fetch(`${API_BASE_URL}/api/categories`);
         if (response.ok) {
             categories = await response.json();
             updateCategoriesUI();
@@ -321,7 +324,7 @@ async function loadHomePage() {
 
 async function loadPosts(category = null, page = 1) {
     try {
-        let url = `/api/posts?page=${page}`;
+        let url = `${API_BASE_URL}/api/posts?page=${page}`;
         if (category) {
             url += `&category=${category}`;
         }
@@ -403,7 +406,7 @@ async function loadPostPage(postId) {
     const app = document.getElementById('app');
     
     try {
-        const response = await fetch(`/api/posts/${postId}`);
+        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`);
         if (!response.ok) {
             throw new Error('Post not found');
         }
@@ -517,7 +520,7 @@ async function loadPostPage(postId) {
 
 async function loadComments(postId) {
     try {
-        const response = await fetch(`/api/posts/${postId}/comments`);
+        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comments`);
         if (response.ok) {
             const comments = await response.json();
             displayComments(comments);
@@ -624,7 +627,7 @@ async function handleLogin(e) {
     const password = document.getElementById('login-password').value;
     
     try {
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -655,7 +658,7 @@ async function handleRegister(e) {
     const password = document.getElementById('register-password').value;
     
     try {
-        const response = await fetch('/api/auth/register', {
+        const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, email, password })
@@ -678,7 +681,7 @@ async function handleRegister(e) {
 
 async function logout() {
     try {
-        await fetch('/api/auth/logout', { method: 'POST' });
+        await fetch(`${API_BASE_URL}/api/auth/logout`, { method: 'POST' });
         currentUser = null;
         updateUserUI();
         showToast('로그아웃되었습니다.', 'success');
@@ -696,7 +699,7 @@ async function toggleReaction(targetType, targetId, reactionType) {
     }
     
     try {
-        const response = await fetch('/api/reactions', {
+        const response = await fetch(`${API_BASE_URL}/api/reactions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ targetType, targetId, reactionType })
@@ -722,7 +725,7 @@ async function submitComment(e, postId) {
     const content = form.content.value;
     
     try {
-        const response = await fetch(`/api/posts/${postId}/comments`, {
+        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comments`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content })
@@ -821,7 +824,7 @@ async function loadNotifications() {
     if (!currentUser) return;
     
     try {
-        const response = await fetch('/api/notifications');
+        const response = await fetch(`${API_BASE_URL}/api/notifications`);
         if (response.ok) {
             const notifications = await response.json();
             updateNotificationsUI(notifications);
@@ -864,7 +867,7 @@ function toggleNotifications(e) {
 
 async function markNotificationRead(notificationId) {
     try {
-        await fetch('/api/notifications/read', {
+        await fetch(`${API_BASE_URL}/api/notifications/read`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ notificationIds: [notificationId] })
@@ -885,7 +888,7 @@ async function markNotificationRead(notificationId) {
 
 async function markAllNotificationsRead() {
     try {
-        await fetch('/api/notifications/read', {
+        await fetch(`${API_BASE_URL}/api/notifications/read`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' }
         });
@@ -910,7 +913,7 @@ async function saveThemeSettings() {
     };
     
     try {
-        await fetch('/api/user/theme', {
+        await fetch(`${API_BASE_URL}/api/user/theme`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -966,7 +969,7 @@ async function saveProfile() {
     const avatarUrl = document.getElementById('profile-avatar').value;
     
     try {
-        const response = await fetch('/api/users/profile', {
+        const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ bio, avatarUrl })
@@ -991,7 +994,7 @@ async function confirmDeleteAccount() {
     }
     
     try {
-        const response = await fetch('/api/auth/account', {
+        const response = await fetch(`${API_BASE_URL}/api/auth/account`, {
             method: 'DELETE'
         });
         
@@ -1076,7 +1079,7 @@ async function createPost(e) {
     const content = document.getElementById('post-content').value;
     
     try {
-        const response = await fetch('/api/posts', {
+        const response = await fetch(`${API_BASE_URL}/api/posts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ categoryId, title, content })
@@ -1118,7 +1121,7 @@ async function loadAdminUsers() {
     const content = document.getElementById('admin-content');
     
     try {
-        const response = await fetch('/api/admin/users');
+        const response = await fetch(`${API_BASE_URL}/api/admin/users`);
         if (response.ok) {
             const data = await response.json();
             
@@ -1183,7 +1186,7 @@ async function changeUserRole(userId, newRole) {
     }
     
     try {
-        const response = await fetch(`/api/admin/users/${userId}/role`, {
+        const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/role`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ role: newRole })
@@ -1208,7 +1211,7 @@ async function loadAdminLogs() {
     const content = document.getElementById('admin-content');
     
     try {
-        const response = await fetch('/api/admin/logs');
+        const response = await fetch(`${API_BASE_URL}/api/admin/logs`);
         if (response.ok) {
             const data = await response.json();
             
@@ -1256,7 +1259,7 @@ async function loadAdminStats() {
     const content = document.getElementById('admin-content');
     
     try {
-        const response = await fetch('/api/stats');
+        const response = await fetch(`${API_BASE_URL}/api/stats`);
         if (response.ok) {
             const stats = await response.json();
             
