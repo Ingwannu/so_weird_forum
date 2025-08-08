@@ -76,6 +76,11 @@ app.use(helmet({
 // CORS 설정
 app.use(cors({
   origin: function(origin, callback) {
+    // origin이 없는 경우 (동일 출처 요청)는 항상 허용
+    if (!origin) {
+      return callback(null, true);
+    }
+    
     // 허용할 오리진들
     const allowedOrigins = [
       'http://119.202.156.3:50012',
@@ -83,15 +88,23 @@ app.use(cors({
       'http://localhost:3000'
     ];
     
-    // origin이 없거나 (같은 도메인) 허용된 오리진에 포함되면 허용
-    if (!origin || allowedOrigins.includes(origin)) {
+    // 개발 환경에서는 모든 origin 허용
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    // 프로덕션에서는 허용된 오리진만 허용
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.log(`CORS blocked origin: ${origin}`);
       callback(null, false);
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Content-Length', 'Content-Type']
 }));
 
 app.use(compression());
@@ -111,9 +124,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // 프테로닥틸 환경에서는 HTTP를 사용하므로 false로 설정
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: 'lax' // CORS 요청에서 쿠키가 전송되도록 설정
   }
 }));
 

@@ -8,47 +8,60 @@ let posts = [];
 // API Base URL 설정
 const API_BASE_URL = window.location.origin;
 
+// Helper function to hide loading screen
+function hideLoadingScreen() {
+    console.log('Hiding loading screen...');
+    const loadingScreen = document.querySelector('.loading-screen');
+    if (loadingScreen) {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+        }, 500);
+    }
+}
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM Content Loaded - Starting initialization...');
+    console.log('Current location:', window.location.href);
+    console.log('API Base URL:', API_BASE_URL);
+    
     try {
-        console.log('Initializing app...');
-        
+        console.log('Step 1: Applying theme...');
         // Apply saved theme
         applyTheme(currentTheme);
         
+        console.log('Step 2: Initializing mouse glow...');
         // Initialize mouse glow effect
         initMouseGlow();
         
+        console.log('Step 3: Loading user session...');
         // Load user session
-        console.log('Loading user session...');
         await loadUserSession();
         
+        console.log('Step 4: Loading categories...');
         // Load categories
-        console.log('Loading categories...');
         await loadCategories();
         
+        console.log('Step 5: Setting up event listeners...');
         // Setup event listeners
         setupEventListeners();
         
+        console.log('Step 6: Setting up router...');
         // Setup router
         setupRouter();
         
-        console.log('App initialized successfully');
+        console.log('App initialized successfully!');
         
-        // Hide loading screen immediately
-        const loadingScreen = document.querySelector('.loading-screen');
-        if (loadingScreen) {
-            loadingScreen.style.display = 'none';
-        }
+        // Hide loading screen after everything is loaded
+        hideLoadingScreen();
     } catch (error) {
-        console.error('Error initializing app:', error);
+        console.error('Critical error during app initialization:', error);
+        console.error('Error stack:', error.stack);
         // Force hide loading screen on error
-        const loadingScreen = document.querySelector('.loading-screen');
-        if (loadingScreen) {
-            loadingScreen.style.display = 'none';
-        }
+        hideLoadingScreen();
         // Show error message
-        showToast('Failed to initialize app. Please refresh the page.', 'error');
+        showToast('앱 초기화 중 오류가 발생했습니다. 페이지를 새로고침해주세요.', 'error');
     }
 });
 
@@ -141,9 +154,10 @@ async function loadUserSession() {
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         
         const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-            credentials: 'include',
+            credentials: 'same-origin',
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             signal: controller.signal
         }).finally(() => clearTimeout(timeoutId));
@@ -179,6 +193,7 @@ async function loadUserSession() {
             showToast('서버 연결 시간이 초과되었습니다. 다시 시도해주세요.', 'error');
         }
         updateUserUI();
+        // Don't throw error here to allow app to continue initializing
     }
 }
 
@@ -251,8 +266,10 @@ async function loadCategories() {
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         
         const response = await fetch(`${API_BASE_URL}/api/categories`, {
+            credentials: 'same-origin',
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             signal: controller.signal
         }).finally(() => clearTimeout(timeoutId));
@@ -265,9 +282,15 @@ async function loadCategories() {
             updateCategoriesUI();
         } else {
             console.error('Failed to load categories, status:', response.status);
+            categories = []; // Set empty array as fallback
         }
     } catch (error) {
         console.error('Failed to load categories:', error);
+        if (error.name === 'AbortError') {
+            console.error('Categories request timed out');
+        }
+        categories = []; // Set empty array as fallback
+        // Don't throw error here to allow app to continue initializing
     }
 }
 
@@ -386,7 +409,7 @@ async function loadPosts(category = null, page = 1) {
             url += `&category=${category}`;
         }
         
-        const response = await fetch(url);
+        const response = await fetch(url, { credentials: 'same-origin' });
         if (response.ok) {
             const posts = await response.json();
             displayPosts(posts);
@@ -463,7 +486,7 @@ async function loadPostPage(postId) {
     const app = document.getElementById('app');
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`);
+        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`, { credentials: 'same-origin' });
         if (!response.ok) {
             throw new Error('Post not found');
         }
@@ -577,7 +600,7 @@ async function loadPostPage(postId) {
 
 async function loadComments(postId) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comments`);
+        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comments`, { credentials: 'same-origin' });
         if (response.ok) {
             const comments = await response.json();
             displayComments(comments);
@@ -686,6 +709,7 @@ async function handleLogin(e) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
@@ -717,6 +741,7 @@ async function handleRegister(e) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, email, password })
         });
@@ -738,7 +763,10 @@ async function handleRegister(e) {
 
 async function logout() {
     try {
-        await fetch(`${API_BASE_URL}/api/auth/logout`, { method: 'POST' });
+        await fetch(`${API_BASE_URL}/api/auth/logout`, { 
+            method: 'POST',
+            credentials: 'same-origin'
+        });
         currentUser = null;
         updateUserUI();
         showToast('로그아웃되었습니다.', 'success');
@@ -758,6 +786,7 @@ async function toggleReaction(targetType, targetId, reactionType) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/reactions`, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ targetType, targetId, reactionType })
         });
@@ -784,6 +813,7 @@ async function submitComment(e, postId) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comments`, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content })
         });
@@ -908,7 +938,7 @@ async function loadNotifications() {
     if (!currentUser) return;
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/notifications`);
+        const response = await fetch(`${API_BASE_URL}/api/notifications`, { credentials: 'same-origin' });
         if (response.ok) {
             const notifications = await response.json();
             updateNotificationsUI(notifications);
@@ -953,6 +983,7 @@ async function markNotificationRead(notificationId) {
     try {
         await fetch(`${API_BASE_URL}/api/notifications/read`, {
             method: 'PUT',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ notificationIds: [notificationId] })
         });
@@ -974,6 +1005,7 @@ async function markAllNotificationsRead() {
     try {
         await fetch(`${API_BASE_URL}/api/notifications/read`, {
             method: 'PUT',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' }
         });
         
@@ -999,6 +1031,7 @@ async function saveThemeSettings() {
     try {
         await fetch(`${API_BASE_URL}/api/user/theme`, {
             method: 'PUT',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 theme: currentTheme,
@@ -1055,6 +1088,7 @@ async function saveProfile() {
     try {
         const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
             method: 'PUT',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ bio, avatarUrl })
         });
@@ -1079,7 +1113,8 @@ async function confirmDeleteAccount() {
     
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/account`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            credentials: 'same-origin'
         });
         
         if (response.ok) {
@@ -1165,6 +1200,7 @@ async function createPost(e) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/posts`, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ categoryId, title, content })
         });
@@ -1205,7 +1241,7 @@ async function loadAdminUsers() {
     const content = document.getElementById('admin-content');
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/users`);
+        const response = await fetch(`${API_BASE_URL}/api/admin/users`, { credentials: 'same-origin' });
         if (response.ok) {
             const data = await response.json();
             
@@ -1272,6 +1308,7 @@ async function changeUserRole(userId, newRole) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/role`, {
             method: 'PUT',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ role: newRole })
         });
@@ -1295,7 +1332,7 @@ async function loadAdminLogs() {
     const content = document.getElementById('admin-content');
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/logs`);
+        const response = await fetch(`${API_BASE_URL}/api/admin/logs`, { credentials: 'same-origin' });
         if (response.ok) {
             const data = await response.json();
             
@@ -1343,7 +1380,7 @@ async function loadAdminStats() {
     const content = document.getElementById('admin-content');
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/stats`);
+        const response = await fetch(`${API_BASE_URL}/api/stats`, { credentials: 'same-origin' });
         if (response.ok) {
             const stats = await response.json();
             
