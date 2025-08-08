@@ -17,13 +17,10 @@ function hideLoadingScreen() {
     console.log('Loading screen current opacity:', loadingScreen ? loadingScreen.style.opacity : 'null');
     
     if (loadingScreen) {
-        console.log('Setting opacity to 0...');
-        loadingScreen.style.opacity = '0';
-        setTimeout(() => {
-            console.log('Setting display to none...');
-            loadingScreen.style.display = 'none';
-            console.log('Loading screen hidden successfully');
-        }, 500);
+        // 즉시 숨기기 - 애니메이션 없이
+        console.log('Hiding loading screen immediately...');
+        loadingScreen.style.display = 'none';
+        console.log('Loading screen hidden successfully');
     } else {
         console.error('Loading screen element not found!');
     }
@@ -37,6 +34,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // 초기화 시작 시간 기록
     const startTime = Date.now();
+    
+    // 5초 후에는 무조건 로딩 화면을 숨김
+    const forceHideTimeout = setTimeout(() => {
+        console.warn('Force hiding loading screen after 5 seconds timeout');
+        const loadingScreen = document.querySelector('.loading-screen');
+        if (loadingScreen && loadingScreen.style.display !== 'none') {
+            loadingScreen.style.display = 'none';
+        }
+    }, 5000);
     
     try {
         console.log('Step 1: Applying theme...');
@@ -66,12 +72,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const endTime = Date.now();
         console.log(`App initialized successfully! Total time: ${endTime - startTime}ms`);
         
+        // Clear force hide timeout
+        clearTimeout(forceHideTimeout);
+        
         // Hide loading screen after everything is loaded including the initial page
         console.log('About to hide loading screen...');
         hideLoadingScreen();
     } catch (error) {
         console.error('Critical error during app initialization:', error);
         console.error('Error stack:', error.stack);
+        
+        // Clear force hide timeout
+        clearTimeout(forceHideTimeout);
+        
         // Force hide loading screen on error
         console.log('Force hiding loading screen due to error...');
         hideLoadingScreen();
