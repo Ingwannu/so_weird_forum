@@ -76,10 +76,18 @@ app.use(helmet({
 // CORS 설정
 app.use(cors({
   origin: function(origin, callback) {
-    // 같은 도메인이거나 설정된 SITE_URL인 경우 허용
-    if (!origin || origin === SITE_URL || origin.includes('119.202.156.3')) {
+    // 허용할 오리진들
+    const allowedOrigins = [
+      'http://119.202.156.3:50012',
+      'http://localhost:50012',
+      'http://localhost:3000'
+    ];
+    
+    // origin이 없거나 (같은 도메인) 허용된 오리진에 포함되면 허용
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log(`CORS blocked origin: ${origin}`);
       callback(null, false);
     }
   },
@@ -90,6 +98,13 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// 요청 로깅 미들웨어
+app.use((req, res, next) => {
+  const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip;
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - IP: ${clientIp} - User-Agent: ${req.headers['user-agent']}`);
+  next();
+});
 
 app.use(session({
   secret: SESSION_SECRET,
@@ -1074,6 +1089,9 @@ app.get('*', (req, res) => {
 
 // 서버 시작
 app.listen(PORT, HOST, () => {
+  console.log('===== 서버 시작 완료 =====');
   console.log(`서버가 포트 ${PORT}에서 실행중입니다.`);
-  console.log(`http://localhost:${PORT} 에서 포럼에 접속할 수 있습니다.`);
+  console.log(`로컬 접속: http://localhost:${PORT}`);
+  console.log(`외부 접속: ${SITE_URL}`);
+  console.log('=========================');
 });

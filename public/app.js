@@ -35,51 +35,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         console.log('App initialized successfully');
         
-        // Hide loading screen with circle reveal effect
-        setTimeout(() => {
-            const loadingScreen = document.querySelector('.loading-screen');
-            if (loadingScreen) {
-                // Create circle reveal effect
-                const circleReveal = document.createElement('div');
-                circleReveal.className = 'circle-reveal';
-                circleReveal.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    width: 0;
-                    height: 0;
-                    border-radius: 50%;
-                    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, var(--bg-primary) 40%);
-                    transform: translate(-50%, -50%);
-                    z-index: 9999;
-                    pointer-events: none;
-                    box-shadow: 
-                        0 0 100px rgba(102, 126, 234, 0.3),
-                        0 0 200px rgba(245, 87, 108, 0.2),
-                        inset 0 0 120px rgba(102, 126, 234, 0.1);
-                    border: 2px solid rgba(102, 126, 234, 0.2);
-                `;
-                document.body.appendChild(circleReveal);
-                
-                // Start the reveal animation
-                requestAnimationFrame(() => {
-                    circleReveal.style.transition = 'all 1.5s cubic-bezier(0.76, 0, 0.24, 1)';
-                    circleReveal.style.width = '300vmax';
-                    circleReveal.style.height = '300vmax';
-                    circleReveal.style.opacity = '0';
-                });
-                
-                // Fade out loading screen
-                loadingScreen.classList.add('fade-out');
-                
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    if (circleReveal.parentNode) {
-                        circleReveal.remove();
-                    }
-                }, 1500);
-            }
-        }, 1000);
+        // Hide loading screen immediately
+        const loadingScreen = document.querySelector('.loading-screen');
+        if (loadingScreen) {
+            loadingScreen.style.display = 'none';
+        }
     } catch (error) {
         console.error('Error initializing app:', error);
         // Force hide loading screen on error
@@ -175,12 +135,18 @@ function cycleTheme() {
 async function loadUserSession() {
     try {
         console.log('Fetching user session from:', `${API_BASE_URL}/api/auth/me`);
+        
+        // 타임아웃 설정 (5초)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
         const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
             credentials: 'include',
             headers: {
                 'Accept': 'application/json'
-            }
-        });
+            },
+            signal: controller.signal
+        }).finally(() => clearTimeout(timeoutId));
         
         console.log('User session response status:', response.status);
         
@@ -208,6 +174,10 @@ async function loadUserSession() {
         }
     } catch (error) {
         console.error('Failed to load user session:', error);
+        if (error.name === 'AbortError') {
+            console.error('User session request timed out');
+            showToast('서버 연결 시간이 초과되었습니다. 다시 시도해주세요.', 'error');
+        }
         updateUserUI();
     }
 }
@@ -275,11 +245,17 @@ function updateUserUI() {
 async function loadCategories() {
     try {
         console.log('Fetching categories from:', `${API_BASE_URL}/api/categories`);
+        
+        // 타임아웃 설정 (5초)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
         const response = await fetch(`${API_BASE_URL}/api/categories`, {
             headers: {
                 'Accept': 'application/json'
-            }
-        });
+            },
+            signal: controller.signal
+        }).finally(() => clearTimeout(timeoutId));
         
         console.log('Categories response status:', response.status);
         
