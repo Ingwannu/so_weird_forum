@@ -148,42 +148,42 @@ function updateUserUI() {
     if (currentUser) {
         // User is logged in
         navUser.innerHTML = `
-            <div class="user-menu-toggle" onclick="toggleUserMenu()">
+            <div class="user-menu-toggle" onclick="toggleUserMenu()" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); cursor: pointer; transition: all 0.3s ease;">
                 ${currentUser.avatar_url ? 
-                    `<img src="${currentUser.avatar_url}" alt="${currentUser.username}" class="user-avatar">` :
-                    `<div class="user-avatar" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${currentUser.username[0].toUpperCase()}</div>`
+                    `<img src="${currentUser.avatar_url}" alt="${currentUser.username}" class="user-avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--glass-border);">` :
+                    `<div class="user-avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--glass-border); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${currentUser.username[0].toUpperCase()}</div>`
                 }
-                <span>${currentUser.username}</span>
+                <span style="font-weight: 500; color: var(--text-primary);">${currentUser.username}</span>
                 ${currentUser.notification_count > 0 ? 
-                    `<span class="notification-badge">${currentUser.notification_count}</span>` : ''
+                    `<span class="notification-badge" style="display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; background: var(--gradient-danger); color: white; font-size: 0.75rem; font-weight: 600; border-radius: 10px;">${currentUser.notification_count}</span>` : ''
                 }
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-down" style="font-size: 0.75rem; color: var(--text-secondary); transition: transform 0.3s ease;"></i>
             </div>
-            <div class="dropdown-menu glass-effect" id="user-menu">
-                <a href="/profile/${currentUser.username}" class="dropdown-item">
+            <div class="dropdown-menu glass-effect" id="user-menu" style="position: absolute; top: calc(100% + 0.5rem); right: 0; min-width: 200px; padding: 0.5rem; border-radius: 16px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+                <a href="/profile/${currentUser.username}" class="dropdown-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 12px; text-decoration: none; color: var(--text-secondary); transition: all 0.2s ease;">
                     <i class="fas fa-user"></i>
                     <span>프로필</span>
                 </a>
-                <a href="#" class="dropdown-item" onclick="openModal('settings-modal')">
+                <a href="#" class="dropdown-item" onclick="openModal('settings-modal')" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 12px; text-decoration: none; color: var(--text-secondary); transition: all 0.2s ease;">
                     <i class="fas fa-cog"></i>
                     <span>설정</span>
                 </a>
                 ${currentUser.role === 'admin' || currentUser.role === 'developer' ? `
-                    <a href="#" class="dropdown-item" onclick="openModal('admin-modal')">
+                    <a href="#" class="dropdown-item" onclick="openModal('admin-modal')" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 12px; text-decoration: none; color: var(--text-secondary); transition: all 0.2s ease;">
                         <i class="fas fa-shield-alt"></i>
                         <span>관리자 패널</span>
                     </a>
                 ` : ''}
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item" onclick="toggleNotifications(event)">
+                <div class="dropdown-divider" style="height: 1px; background: var(--glass-border); margin: 0.5rem 0;"></div>
+                <a href="#" class="dropdown-item" onclick="toggleNotifications(event)" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 12px; text-decoration: none; color: var(--text-secondary); transition: all 0.2s ease;">
                     <i class="fas fa-bell"></i>
                     <span>알림</span>
                     ${currentUser.notification_count > 0 ? 
-                        `<span class="notification-count">${currentUser.notification_count}</span>` : ''
+                        `<span class="notification-count" style="margin-left: auto; background: var(--gradient-danger); color: white; font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 9999px;">${currentUser.notification_count}</span>` : ''
                     }
                 </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item" onclick="logout()">
+                <div class="dropdown-divider" style="height: 1px; background: var(--glass-border); margin: 0.5rem 0;"></div>
+                <a href="#" class="dropdown-item" onclick="logout()" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 12px; text-decoration: none; color: var(--text-secondary); transition: all 0.2s ease;">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>로그아웃</span>
                 </a>
@@ -192,10 +192,10 @@ function updateUserUI() {
     } else {
         // User is not logged in
         navUser.innerHTML = `
-            <button class="btn btn-gradient" onclick="openModal('login-modal')">
+            <button class="btn btn-gradient" onclick="openModal('login-modal')" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; font-size: 1rem; font-family: inherit; background: var(--gradient-primary); color: white;">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>로그인</span>
-                <div class="btn-glow"></div>
+                <div class="btn-glow" style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); filter: blur(20px); background: inherit; opacity: 0; transition: opacity 0.3s ease; z-index: -1;"></div>
             </button>
         `;
     }
@@ -217,7 +217,7 @@ async function loadCategories() {
 function updateCategoriesUI() {
     const dropdown = document.getElementById('categories-dropdown');
     dropdown.innerHTML = categories.map(category => `
-        <a href="/category/${category.slug}" class="dropdown-item" data-category="${category.slug}">
+        <a href="/category/${category.slug}" class="dropdown-item" data-category="${category.slug}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 12px; text-decoration: none; color: var(--text-secondary); transition: all 0.2s ease;">
             <span>${category.icon}</span>
             <span>${category.name}</span>
         </a>
@@ -354,45 +354,45 @@ function displayPosts(posts) {
     }
     
     container.innerHTML = posts.map(post => `
-        <article class="post-card">
-            ${post.is_pinned ? '<div class="post-pinned"><i class="fas fa-thumbtack"></i> 고정됨</div>' : ''}
-            <div class="post-header">
-                <div class="post-meta">
-                    <a href="/profile/${post.username}" class="post-author">
+        <article class="post-card" style="background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 1.5rem; margin-bottom: 1rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+            ${post.is_pinned ? '<div class="post-pinned" style="position: absolute; top: 1rem; right: 1rem; background: var(--gradient-primary); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; font-weight: 600;"><i class="fas fa-thumbtack"></i> 고정됨</div>' : ''}
+            <div class="post-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <div class="post-meta" style="display: flex; align-items: center; gap: 1rem;">
+                    <a href="/profile/${post.username}" class="post-author" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--text-primary); transition: all 0.2s ease;">
                         ${post.avatar_url ? 
-                            `<img src="${post.avatar_url}" alt="${post.username}" class="user-avatar">` :
-                            `<div class="user-avatar" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${post.username[0].toUpperCase()}</div>`
+                            `<img src="${post.avatar_url}" alt="${post.username}" class="user-avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--glass-border);">` :
+                            `<div class="user-avatar" style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${post.username[0].toUpperCase()}</div>`
                         }
                         <div>
-                            <div class="author-name">${post.username}</div>
-                            <div class="post-time">${formatDate(post.created_at)}</div>
+                            <div class="author-name" style="font-weight: 600; color: var(--text-primary);">${post.username}</div>
+                            <div class="post-time" style="font-size: 0.875rem; color: var(--text-tertiary);">${formatDate(post.created_at)}</div>
                         </div>
                     </a>
-                    ${post.author_role !== 'normal' ? `<span class="user-role-badge role-${post.author_role}">${getRoleName(post.author_role)}</span>` : ''}
+                    ${post.author_role !== 'normal' ? `<span class="user-role-badge role-${post.author_role}" style="display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: ${post.author_role === 'developer' ? 'var(--gradient-danger)' : post.author_role === 'admin' ? 'var(--gradient-primary)' : 'var(--gradient-success)'}; color: white;">${getRoleName(post.author_role)}</span>` : ''}
                 </div>
-                <a href="/category/${post.category_slug}" class="post-category">
+                <a href="/category/${post.category_slug}" class="post-category" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; text-decoration: none; color: var(--text-secondary); font-size: 0.875rem; transition: all 0.2s ease;">
                     <span>${post.category_icon}</span>
                     <span>${post.category_name}</span>
                 </a>
             </div>
             
-            <a href="/post/${post.id}" class="post-title">${escapeHtml(post.title)}</a>
+            <a href="/post/${post.id}" class="post-title" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary); text-decoration: none; display: block; transition: all 0.2s ease;">${escapeHtml(post.title)}</a>
             
-            <div class="post-content">
+            <div class="post-content" style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;">
                 ${truncateText(post.content, 200)}
             </div>
             
             <div class="post-footer">
-                <div class="post-stats">
-                    <span class="post-stat">
+                <div class="post-stats" style="display: flex; align-items: center; gap: 1.5rem; color: var(--text-tertiary); font-size: 0.875rem;">
+                    <span class="post-stat" style="display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fas fa-eye"></i>
                         <span>${post.view_count}</span>
                     </span>
-                    <span class="post-stat">
+                    <span class="post-stat" style="display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fas fa-thumbs-up"></i>
                         <span>${post.likes}</span>
                     </span>
-                    <span class="post-stat">
+                    <span class="post-stat" style="display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fas fa-thumbs-down"></i>
                         <span>${post.dislikes}</span>
                     </span>
@@ -766,7 +766,32 @@ function showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.innerHTML = `<div class="toast-message">${message}</div>`;
+    
+    // 타입별 색상 설정
+    let borderColor = 'var(--gradient-primary)';
+    if (type === 'success') borderColor = 'var(--gradient-success)';
+    else if (type === 'error') borderColor = 'var(--gradient-danger)';
+    
+    toast.style.cssText = `
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1rem;
+        min-width: 300px;
+        box-shadow: 0 10px 30px var(--shadow-color);
+        animation: slideInRight 0.3s ease;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    `;
+    
+    toast.innerHTML = `
+        <div style="content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: ${borderColor};"></div>
+        <div class="toast-message" style="font-weight: 500; color: var(--text-primary); padding-left: 0.5rem;">${message}</div>
+    `;
     
     container.appendChild(toast);
     
@@ -816,7 +841,9 @@ function getRoleName(role) {
 // User Menu Toggle
 function toggleUserMenu() {
     const menu = document.getElementById('user-menu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    menu.style.opacity = menu.style.opacity === '0' ? '1' : '0';
+    menu.style.visibility = menu.style.visibility === 'hidden' ? 'visible' : 'hidden';
+    menu.style.transform = menu.style.transform === 'translateY(-10px)' ? 'translateY(0)' : 'translateY(-10px)';
 }
 
 // Notifications

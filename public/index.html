@@ -16,59 +16,226 @@
     <!-- Highlight.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/styles.css">
+    <!-- Inline Styles -->
+    <style>
+        /* Root Variables */
+        :root {
+            /* Light Theme Colors */
+            --light-bg-primary: #ffffff;
+            --light-bg-secondary: #f9fafb;
+            --light-bg-tertiary: #f3f4f6;
+            --light-text-primary: #111827;
+            --light-text-secondary: #6b7280;
+            --light-text-tertiary: #9ca3af;
+            --light-border: #e5e7eb;
+            --light-shadow: rgba(0, 0, 0, 0.1);
+            
+            /* Dark Theme Colors */
+            --dark-bg-primary: #0f0f14;
+            --dark-bg-secondary: #1a1a24;
+            --dark-bg-tertiary: #252534;
+            --dark-text-primary: #f9fafb;
+            --dark-text-secondary: #d1d5db;
+            --dark-text-tertiary: #9ca3af;
+            --dark-border: #374151;
+            --dark-shadow: rgba(0, 0, 0, 0.5);
+            
+            /* ING Theme Colors (Comfortable Green) */
+            --ing-bg-primary: #0d1f0f;
+            --ing-bg-secondary: #162a19;
+            --ing-bg-tertiary: #1f3623;
+            --ing-text-primary: #e8f5e9;
+            --ing-text-secondary: #c8e6c9;
+            --ing-text-tertiary: #81c784;
+            --ing-border: #2e5a32;
+            --ing-shadow: rgba(46, 125, 50, 0.2);
+            
+            /* Gradient Colors */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --gradient-premium: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            
+            /* Dynamic Theme Variables */
+            --bg-primary: var(--light-bg-primary);
+            --bg-secondary: var(--light-bg-secondary);
+            --bg-tertiary: var(--light-bg-tertiary);
+            --text-primary: var(--light-text-primary);
+            --text-secondary: var(--light-text-secondary);
+            --text-tertiary: var(--light-text-tertiary);
+            --border-color: var(--light-border);
+            --shadow-color: var(--light-shadow);
+            
+            /* Glass Effect Variables */
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --glass-blur: 10px;
+            
+            /* Animation Variables */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            /* Custom Color Variables (for color picker) */
+            --custom-primary: #667eea;
+            --custom-secondary: #764ba2;
+            --custom-accent: #f093fb;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-primary: var(--dark-bg-primary);
+            --bg-secondary: var(--dark-bg-secondary);
+            --bg-tertiary: var(--dark-bg-tertiary);
+            --text-primary: var(--dark-text-primary);
+            --text-secondary: var(--dark-text-secondary);
+            --text-tertiary: var(--dark-text-tertiary);
+            --border-color: var(--dark-border);
+            --shadow-color: var(--dark-shadow);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* ING Theme */
+        [data-theme="ing"] {
+            --bg-primary: var(--ing-bg-primary);
+            --bg-secondary: var(--ing-bg-secondary);
+            --bg-tertiary: var(--ing-bg-tertiary);
+            --text-primary: var(--ing-text-primary);
+            --text-secondary: var(--ing-text-secondary);
+            --text-tertiary: var(--ing-text-tertiary);
+            --border-color: var(--ing-border);
+            --shadow-color: var(--ing-shadow);
+            --glass-bg: rgba(129, 199, 132, 0.05);
+            --glass-border: rgba(129, 199, 132, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(46, 125, 50, 0.15);
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 6px;
+            border: 2px solid var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-secondary);
+        }
+
+        /* Keyframes */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translate(-50%, -40%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
 </head>
-<body>
+<body style="font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background-color: var(--bg-primary); color: var(--text-primary); line-height: 1.6; transition: background-color 0.5s ease, color 0.5s ease; overflow-x: hidden; position: relative;">
     <!-- Mouse Glow Effect -->
-    <div class="mouse-glow"></div>
-    <div class="mouse-glow-trail"></div>
+    <div class="mouse-glow" style="position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%); pointer-events: none; transform: translate(-50%, -50%); z-index: 9998; transition: opacity 0.3s ease; mix-blend-mode: screen;"></div>
+    <div class="mouse-glow-trail" style="position: fixed; width: 800px; height: 800px; border-radius: 50%; background: radial-gradient(circle, rgba(245, 87, 108, 0.05) 0%, transparent 60%); pointer-events: none; transform: translate(-50%, -50%); z-index: 9997; transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1); mix-blend-mode: screen;"></div>
     
     <!-- Loading Screen -->
-    <div class="loading-screen">
-        <div class="loading-spinner">
-            <div class="spinner-ring"></div>
-            <div class="spinner-ring"></div>
-            <div class="spinner-ring"></div>
+    <div class="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; transition: opacity 0.5s ease;">
+        <div class="loading-spinner" style="position: relative; width: 120px; height: 120px;">
+            <div class="spinner-ring" style="position: absolute; width: 100%; height: 100%; border: 3px solid transparent; border-top-color: var(--custom-primary); border-radius: 50%; animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;"></div>
+            <div class="spinner-ring" style="position: absolute; width: 80%; height: 80%; top: 10%; left: 10%; border: 3px solid transparent; border-top-color: var(--custom-secondary); border-radius: 50%; animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; animation-delay: 0.2s;"></div>
+            <div class="spinner-ring" style="position: absolute; width: 60%; height: 60%; top: 20%; left: 20%; border: 3px solid transparent; border-top-color: var(--custom-accent); border-radius: 50%; animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; animation-delay: 0.4s;"></div>
         </div>
-        <p class="loading-text">Premium Forum</p>
+        <p class="loading-text" style="margin-top: 2rem; font-size: 1.5rem; font-weight: 600; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Premium Forum</p>
     </div>
     
     <!-- Navigation -->
-    <nav class="navbar glass-effect">
-        <div class="nav-container">
-            <div class="nav-left">
-                <a href="/" class="nav-logo">
-                    <span class="logo-gradient">Premium Forum</span>
+    <nav class="navbar glass-effect" style="position: fixed; top: 0; left: 0; right: 0; height: 70px; z-index: 1000; transition: all 0.3s ease; border-bottom: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+        <div class="nav-container" style="max-width: 1400px; margin: 0 auto; padding: 0 2rem; height: 100%; display: flex; align-items: center; justify-content: space-between;">
+            <div class="nav-left" style="display: flex; align-items: center; gap: 3rem;">
+                <a href="/" class="nav-logo" style="font-size: 1.5rem; font-weight: 800; text-decoration: none; transition: transform 0.3s ease;">
+                    <span class="logo-gradient" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Premium Forum</span>
                 </a>
-                <div class="nav-links">
-                    <a href="/" class="nav-link active" data-page="home">
+                <div class="nav-links" style="display: flex; align-items: center; gap: 1rem;">
+                    <a href="/" class="nav-link active" data-page="home" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 12px; text-decoration: none; color: var(--text-primary); font-weight: 500; transition: all 0.3s ease; position: relative; overflow: hidden; background: var(--glass-bg);">
                         <i class="fas fa-home"></i>
                         <span>홈</span>
                     </a>
-                    <div class="nav-dropdown">
-                        <button class="nav-link dropdown-toggle">
+                    <div class="nav-dropdown" style="position: relative;">
+                        <button class="nav-link dropdown-toggle" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 12px; text-decoration: none; color: var(--text-secondary); font-weight: 500; transition: all 0.3s ease; position: relative; overflow: hidden; background: none; border: none; cursor: pointer; font-size: inherit; font-family: inherit;">
                             <i class="fas fa-list"></i>
                             <span>카테고리</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
-                        <div class="dropdown-menu glass-effect" id="categories-dropdown">
+                        <div class="dropdown-menu glass-effect" id="categories-dropdown" style="position: absolute; top: calc(100% + 0.5rem); left: 0; min-width: 200px; padding: 0.5rem; border-radius: 16px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
                             <!-- Categories will be loaded here -->
                         </div>
                     </div>
-                    <a href="/search" class="nav-link" data-page="search">
+                    <a href="/search" class="nav-link" data-page="search" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 12px; text-decoration: none; color: var(--text-secondary); font-weight: 500; transition: all 0.3s ease; position: relative; overflow: hidden;">
                         <i class="fas fa-search"></i>
                         <span>검색</span>
                     </a>
                 </div>
             </div>
             
-            <div class="nav-right">
-                <button class="theme-toggle glass-button" id="theme-toggle">
+            <div class="nav-right" style="display: flex; align-items: center; gap: 1rem;">
+                <button class="theme-toggle glass-button" id="theme-toggle" style="padding: 0.75rem; border-radius: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; font-size: 1.25rem;">
                     <i class="fas fa-moon"></i>
                 </button>
                 
-                <div class="nav-user" id="nav-user">
+                <div class="nav-user" id="nav-user" style="position: relative;">
                     <!-- User menu will be loaded here -->
                 </div>
             </div>
@@ -76,175 +243,175 @@
     </nav>
     
     <!-- Main Content -->
-    <main class="main-content">
-        <div class="container" id="app">
+    <main class="main-content" style="margin-top: 70px; min-height: calc(100vh - 70px); padding: 2rem 0;">
+        <div class="container" id="app" style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
             <!-- Dynamic content will be loaded here -->
         </div>
     </main>
     
     <!-- Modals -->
     <!-- Login Modal -->
-    <div class="modal" id="login-modal">
-        <div class="modal-backdrop" onclick="closeModal('login-modal')"></div>
-        <div class="modal-content glass-effect">
-            <div class="modal-header">
-                <h2 class="modal-title">로그인</h2>
-                <button class="modal-close" onclick="closeModal('login-modal')">
+    <div class="modal" id="login-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; animation: fadeIn 0.3s ease;">
+        <div class="modal-backdrop" onclick="closeModal('login-modal')" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);"></div>
+        <div class="modal-content glass-effect" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; border-radius: 24px; animation: slideUp 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+            <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+                <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">로그인</h2>
+                <button class="modal-close" onclick="closeModal('login-modal')" style="width: 40px; height: 40px; border-radius: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form id="login-form" class="modal-body">
-                <div class="form-group">
-                    <label for="login-email">이메일</label>
-                    <input type="email" id="login-email" class="form-input glass-input" required>
-                    <div class="input-glow"></div>
+            <form id="login-form" class="modal-body" style="padding: 1.5rem;">
+                <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+                    <label for="login-email" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">이메일</label>
+                    <input type="email" id="login-email" class="form-input glass-input" required style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 1rem; font-family: inherit; transition: all 0.3s ease;">
+                    <div class="input-glow" style="position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gradient-primary); transform: translateX(-50%); transition: width 0.3s ease;"></div>
                 </div>
-                <div class="form-group">
-                    <label for="login-password">비밀번호</label>
-                    <input type="password" id="login-password" class="form-input glass-input" required>
-                    <div class="input-glow"></div>
+                <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+                    <label for="login-password" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">비밀번호</label>
+                    <input type="password" id="login-password" class="form-input glass-input" required style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 1rem; font-family: inherit; transition: all 0.3s ease;">
+                    <div class="input-glow" style="position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gradient-primary); transform: translateX(-50%); transition: width 0.3s ease;"></div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-gradient btn-block">
+                <button type="submit" class="btn btn-primary btn-gradient btn-block" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; font-size: 1rem; font-family: inherit; background: var(--gradient-primary); color: white; width: 100%;">
                     <span>로그인</span>
-                    <div class="btn-glow"></div>
+                    <div class="btn-glow" style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); filter: blur(20px); background: inherit; opacity: 0; transition: opacity 0.3s ease; z-index: -1;"></div>
                 </button>
             </form>
-            <div class="modal-footer">
-                <p>계정이 없으신가요? <a href="#" onclick="switchModal('login-modal', 'register-modal')">회원가입</a></p>
+            <div class="modal-footer" style="padding: 1.5rem; border-top: 1px solid var(--glass-border); text-align: center; color: var(--text-secondary);">
+                <p>계정이 없으신가요? <a href="#" onclick="switchModal('login-modal', 'register-modal')" style="color: var(--custom-primary); text-decoration: none; font-weight: 600; transition: all 0.2s ease;">회원가입</a></p>
             </div>
         </div>
     </div>
     
     <!-- Register Modal -->
-    <div class="modal" id="register-modal">
-        <div class="modal-backdrop" onclick="closeModal('register-modal')"></div>
-        <div class="modal-content glass-effect">
-            <div class="modal-header">
-                <h2 class="modal-title">회원가입</h2>
-                <button class="modal-close" onclick="closeModal('register-modal')">
+    <div class="modal" id="register-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; animation: fadeIn 0.3s ease;">
+        <div class="modal-backdrop" onclick="closeModal('register-modal')" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);"></div>
+        <div class="modal-content glass-effect" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; border-radius: 24px; animation: slideUp 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+            <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+                <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">회원가입</h2>
+                <button class="modal-close" onclick="closeModal('register-modal')" style="width: 40px; height: 40px; border-radius: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form id="register-form" class="modal-body">
-                <div class="form-group">
-                    <label for="register-username">사용자명</label>
-                    <input type="text" id="register-username" class="form-input glass-input" required>
-                    <div class="input-glow"></div>
+            <form id="register-form" class="modal-body" style="padding: 1.5rem;">
+                <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+                    <label for="register-username" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">사용자명</label>
+                    <input type="text" id="register-username" class="form-input glass-input" required style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 1rem; font-family: inherit; transition: all 0.3s ease;">
+                    <div class="input-glow" style="position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gradient-primary); transform: translateX(-50%); transition: width 0.3s ease;"></div>
                 </div>
-                <div class="form-group">
-                    <label for="register-email">이메일</label>
-                    <input type="email" id="register-email" class="form-input glass-input" required>
-                    <div class="input-glow"></div>
+                <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+                    <label for="register-email" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">이메일</label>
+                    <input type="email" id="register-email" class="form-input glass-input" required style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 1rem; font-family: inherit; transition: all 0.3s ease;">
+                    <div class="input-glow" style="position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gradient-primary); transform: translateX(-50%); transition: width 0.3s ease;"></div>
                 </div>
-                <div class="form-group">
-                    <label for="register-password">비밀번호</label>
-                    <input type="password" id="register-password" class="form-input glass-input" required minlength="6">
-                    <div class="input-glow"></div>
-                    <small class="form-hint">비밀번호는 6자 이상이어야 합니다.</small>
+                <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+                    <label for="register-password" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">비밀번호</label>
+                    <input type="password" id="register-password" class="form-input glass-input" required minlength="6" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 1rem; font-family: inherit; transition: all 0.3s ease;">
+                    <div class="input-glow" style="position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gradient-primary); transform: translateX(-50%); transition: width 0.3s ease;"></div>
+                    <small class="form-hint" style="display: block; margin-top: 0.25rem; font-size: 0.875rem; color: var(--text-tertiary);">비밀번호는 6자 이상이어야 합니다.</small>
                 </div>
-                <button type="submit" class="btn btn-primary btn-gradient btn-block">
+                <button type="submit" class="btn btn-primary btn-gradient btn-block" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; font-size: 1rem; font-family: inherit; background: var(--gradient-primary); color: white; width: 100%;">
                     <span>회원가입</span>
-                    <div class="btn-glow"></div>
+                    <div class="btn-glow" style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); filter: blur(20px); background: inherit; opacity: 0; transition: opacity 0.3s ease; z-index: -1;"></div>
                 </button>
             </form>
-            <div class="modal-footer">
-                <p>이미 계정이 있으신가요? <a href="#" onclick="switchModal('register-modal', 'login-modal')">로그인</a></p>
+            <div class="modal-footer" style="padding: 1.5rem; border-top: 1px solid var(--glass-border); text-align: center; color: var(--text-secondary);">
+                <p>이미 계정이 있으신가요? <a href="#" onclick="switchModal('register-modal', 'login-modal')" style="color: var(--custom-primary); text-decoration: none; font-weight: 600; transition: all 0.2s ease;">로그인</a></p>
             </div>
         </div>
     </div>
     
     <!-- Settings Modal -->
-    <div class="modal" id="settings-modal">
-        <div class="modal-backdrop" onclick="closeModal('settings-modal')"></div>
-        <div class="modal-content glass-effect modal-large">
-            <div class="modal-header">
-                <h2 class="modal-title">설정</h2>
-                <button class="modal-close" onclick="closeModal('settings-modal')">
+    <div class="modal" id="settings-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; animation: fadeIn 0.3s ease;">
+        <div class="modal-backdrop" onclick="closeModal('settings-modal')" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);"></div>
+        <div class="modal-content glass-effect modal-large" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; border-radius: 24px; animation: slideUp 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+            <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+                <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">설정</h2>
+                <button class="modal-close" onclick="closeModal('settings-modal')" style="width: 40px; height: 40px; border-radius: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="settings-section">
-                    <h3 class="settings-title">테마 설정</h3>
-                    <div class="theme-options">
-                        <label class="theme-option glass-card">
-                            <input type="radio" name="theme" value="light" id="theme-light">
-                            <div class="theme-preview theme-light-preview">
-                                <i class="fas fa-sun"></i>
+            <div class="modal-body" style="padding: 1.5rem;">
+                <div class="settings-section" style="margin-bottom: 2rem;">
+                    <h3 class="settings-title" style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-primary); font-weight: 600;">테마 설정</h3>
+                    <div class="theme-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+                        <label class="theme-option glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+                            <input type="radio" name="theme" value="light" id="theme-light" style="display: none;">
+                            <div class="theme-preview theme-light-preview" style="width: 60px; height: 60px; border-radius: 50%; background: #f9fafb; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; border: 2px solid #e5e7eb;">
+                                <i class="fas fa-sun" style="font-size: 1.5rem; color: #111827;"></i>
                             </div>
-                            <span>라이트</span>
+                            <span style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">라이트</span>
                         </label>
-                        <label class="theme-option glass-card">
-                            <input type="radio" name="theme" value="dark" id="theme-dark">
-                            <div class="theme-preview theme-dark-preview">
-                                <i class="fas fa-moon"></i>
+                        <label class="theme-option glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+                            <input type="radio" name="theme" value="dark" id="theme-dark" style="display: none;">
+                            <div class="theme-preview theme-dark-preview" style="width: 60px; height: 60px; border-radius: 50%; background: #1a1a24; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; border: 2px solid #374151;">
+                                <i class="fas fa-moon" style="font-size: 1.5rem; color: #f9fafb;"></i>
                             </div>
-                            <span>다크</span>
+                            <span style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">다크</span>
                         </label>
-                        <label class="theme-option glass-card">
-                            <input type="radio" name="theme" value="ing" id="theme-ing">
-                            <div class="theme-preview theme-ing-preview">
-                                <i class="fas fa-leaf"></i>
+                        <label class="theme-option glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+                            <input type="radio" name="theme" value="ing" id="theme-ing" style="display: none;">
+                            <div class="theme-preview theme-ing-preview" style="width: 60px; height: 60px; border-radius: 50%; background: #162a19; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; border: 2px solid #2e5a32;">
+                                <i class="fas fa-leaf" style="font-size: 1.5rem; color: #81c784;"></i>
                             </div>
-                            <span>ING</span>
+                            <span style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">ING</span>
                         </label>
                     </div>
                 </div>
                 
-                <div class="settings-section">
-                    <h3 class="settings-title">커스텀 색상</h3>
-                    <div class="color-pickers">
-                        <div class="color-picker-group">
-                            <label for="primary-color">주 색상</label>
-                            <div class="color-input-wrapper">
-                                <input type="color" id="primary-color" class="color-picker">
-                                <input type="text" id="primary-color-text" class="form-input glass-input color-text" placeholder="#6366f1">
+                <div class="settings-section" style="margin-bottom: 2rem;">
+                    <h3 class="settings-title" style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-primary); font-weight: 600;">커스텀 색상</h3>
+                    <div class="color-pickers" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div class="color-picker-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <label for="primary-color" style="font-weight: 500; color: var(--text-secondary);">주 색상</label>
+                            <div class="color-input-wrapper" style="display: flex; gap: 0.5rem;">
+                                <input type="color" id="primary-color" class="color-picker" style="width: 50px; height: 40px; border: none; border-radius: 8px; cursor: pointer;">
+                                <input type="text" id="primary-color-text" class="form-input glass-input color-text" placeholder="#6366f1" style="flex: 1; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 0.875rem; font-family: inherit; transition: all 0.3s ease;">
                             </div>
                         </div>
-                        <div class="color-picker-group">
-                            <label for="secondary-color">보조 색상</label>
-                            <div class="color-input-wrapper">
-                                <input type="color" id="secondary-color" class="color-picker">
-                                <input type="text" id="secondary-color-text" class="form-input glass-input color-text" placeholder="#8b5cf6">
+                        <div class="color-picker-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <label for="secondary-color" style="font-weight: 500; color: var(--text-secondary);">보조 색상</label>
+                            <div class="color-input-wrapper" style="display: flex; gap: 0.5rem;">
+                                <input type="color" id="secondary-color" class="color-picker" style="width: 50px; height: 40px; border: none; border-radius: 8px; cursor: pointer;">
+                                <input type="text" id="secondary-color-text" class="form-input glass-input color-text" placeholder="#8b5cf6" style="flex: 1; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 0.875rem; font-family: inherit; transition: all 0.3s ease;">
                             </div>
                         </div>
-                        <div class="color-picker-group">
-                            <label for="accent-color">강조 색상</label>
-                            <div class="color-input-wrapper">
-                                <input type="color" id="accent-color" class="color-picker">
-                                <input type="text" id="accent-color-text" class="form-input glass-input color-text" placeholder="#ec4899">
+                        <div class="color-picker-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <label for="accent-color" style="font-weight: 500; color: var(--text-secondary);">강조 색상</label>
+                            <div class="color-input-wrapper" style="display: flex; gap: 0.5rem;">
+                                <input type="color" id="accent-color" class="color-picker" style="width: 50px; height: 40px; border: none; border-radius: 8px; cursor: pointer;">
+                                <input type="text" id="accent-color-text" class="form-input glass-input color-text" placeholder="#ec4899" style="flex: 1; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 0.875rem; font-family: inherit; transition: all 0.3s ease;">
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-secondary" onclick="resetColors()">
+                    <button class="btn btn-secondary" onclick="resetColors()" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; border: 1px solid var(--glass-border); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; font-size: 1rem; font-family: inherit; background: var(--glass-bg); color: var(--text-primary);">
                         <i class="fas fa-undo"></i>
                         <span>기본 색상으로 재설정</span>
                     </button>
                 </div>
                 
-                <div class="settings-section">
-                    <h3 class="settings-title">프로필 설정</h3>
+                <div class="settings-section" style="margin-bottom: 2rem;">
+                    <h3 class="settings-title" style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-primary); font-weight: 600;">프로필 설정</h3>
                     <div class="profile-settings">
-                        <div class="form-group">
-                            <label for="profile-avatar">아바타 URL</label>
-                            <input type="url" id="profile-avatar" class="form-input glass-input" placeholder="https://example.com/avatar.jpg">
-                            <div class="input-glow"></div>
+                        <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+                            <label for="profile-avatar" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">아바타 URL</label>
+                            <input type="url" id="profile-avatar" class="form-input glass-input" placeholder="https://example.com/avatar.jpg" style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 1rem; font-family: inherit; transition: all 0.3s ease;">
+                            <div class="input-glow" style="position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gradient-primary); transform: translateX(-50%); transition: width 0.3s ease;"></div>
                         </div>
-                        <div class="form-group">
-                            <label for="profile-bio">자기소개</label>
-                            <textarea id="profile-bio" class="form-input glass-input" rows="4" placeholder="자신을 소개해주세요..."></textarea>
-                            <div class="input-glow"></div>
+                        <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+                            <label for="profile-bio" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">자기소개</label>
+                            <textarea id="profile-bio" class="form-input glass-input" rows="4" placeholder="자신을 소개해주세요..." style="width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 1rem; font-family: inherit; transition: all 0.3s ease; resize: vertical;"></textarea>
+                            <div class="input-glow" style="position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--gradient-primary); transform: translateX(-50%); transition: width 0.3s ease;"></div>
                         </div>
-                        <button class="btn btn-primary btn-gradient" onclick="saveProfile()">
+                        <button class="btn btn-primary btn-gradient" onclick="saveProfile()" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; font-size: 1rem; font-family: inherit; background: var(--gradient-primary); color: white;">
                             <span>프로필 저장</span>
-                            <div class="btn-glow"></div>
+                            <div class="btn-glow" style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); filter: blur(20px); background: inherit; opacity: 0; transition: opacity 0.3s ease; z-index: -1;"></div>
                         </button>
                     </div>
                 </div>
                 
-                <div class="settings-section danger-zone">
-                    <h3 class="settings-title">위험 구역</h3>
-                    <button class="btn btn-danger" onclick="confirmDeleteAccount()">
+                <div class="settings-section danger-zone" style="margin-bottom: 2rem; padding: 1.5rem; background: rgba(250, 112, 154, 0.1); border-radius: 12px; border: 1px solid rgba(250, 112, 154, 0.2);">
+                    <h3 class="settings-title" style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-primary); font-weight: 600;">위험 구역</h3>
+                    <button class="btn btn-danger" onclick="confirmDeleteAccount()" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; font-size: 1rem; font-family: inherit; background: var(--gradient-danger); color: white;">
                         <i class="fas fa-trash"></i>
                         <span>계정 삭제</span>
                     </button>
@@ -254,26 +421,26 @@
     </div>
     
     <!-- Admin Panel Modal -->
-    <div class="modal" id="admin-modal">
-        <div class="modal-backdrop" onclick="closeModal('admin-modal')"></div>
-        <div class="modal-content glass-effect modal-fullscreen">
-            <div class="modal-header">
-                <h2 class="modal-title">관리자 패널</h2>
-                <button class="modal-close" onclick="closeModal('admin-modal')">
+    <div class="modal" id="admin-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; animation: fadeIn 0.3s ease;">
+        <div class="modal-backdrop" onclick="closeModal('admin-modal')" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);"></div>
+        <div class="modal-content glass-effect modal-fullscreen" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 95%; height: 95vh; overflow-y: auto; border-radius: 24px; animation: slideUp 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+            <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+                <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 700; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">관리자 패널</h2>
+                <button class="modal-close" onclick="closeModal('admin-modal')" style="width: 40px; height: 40px; border-radius: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="admin-tabs">
-                    <button class="admin-tab active" onclick="switchAdminTab('users')">
+            <div class="modal-body" style="padding: 1.5rem;">
+                <div class="admin-tabs" style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0;">
+                    <button class="admin-tab active" onclick="switchAdminTab('users')" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: none; border: none; border-bottom: 2px solid var(--custom-primary); color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; font-family: inherit;">
                         <i class="fas fa-users"></i>
                         <span>사용자 관리</span>
                     </button>
-                    <button class="admin-tab" onclick="switchAdminTab('logs')">
+                    <button class="admin-tab" onclick="switchAdminTab('logs')" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; font-family: inherit;">
                         <i class="fas fa-history"></i>
                         <span>관리 로그</span>
                     </button>
-                    <button class="admin-tab" onclick="switchAdminTab('stats')">
+                    <button class="admin-tab" onclick="switchAdminTab('stats')" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; font-family: inherit;">
                         <i class="fas fa-chart-bar"></i>
                         <span>통계</span>
                     </button>
@@ -286,15 +453,15 @@
     </div>
     
     <!-- Notification Toast -->
-    <div class="toast-container" id="toast-container"></div>
+    <div class="toast-container" id="toast-container" style="position: fixed; top: 90px; right: 20px; z-index: 3000;"></div>
     
     <!-- Notification Dropdown -->
-    <div class="notification-dropdown glass-effect" id="notification-dropdown">
-        <div class="notification-header">
-            <h3>알림</h3>
-            <button class="btn-text" onclick="markAllNotificationsRead()">모두 읽음</button>
+    <div class="notification-dropdown glass-effect" id="notification-dropdown" style="position: absolute; top: calc(100% + 1rem); right: 0; width: 400px; max-height: 500px; border-radius: 20px; overflow: hidden; display: none; animation: slideDown 0.3s ease; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);">
+        <div class="notification-header" style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--text-primary); margin: 0;">알림</h3>
+            <button class="btn-text" onclick="markAllNotificationsRead()" style="background: none; border: none; color: var(--custom-primary); font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 0.875rem; font-family: inherit;">모두 읽음</button>
         </div>
-        <div class="notification-list" id="notification-list">
+        <div class="notification-list" id="notification-list" style="max-height: 400px; overflow-y: auto;">
             <!-- Notifications will be loaded here -->
         </div>
     </div>
