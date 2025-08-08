@@ -178,7 +178,6 @@ body {
   height: 100%;
   background: var(--bg-primary);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 10000;
@@ -201,9 +200,12 @@ body {
   width: 100%;
   height: 100%;
   border: 3px solid transparent;
-  border-top-color: var(--custom-primary);
   border-radius: 50%;
   animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+}
+
+.spinner-ring:nth-child(1) {
+  border-top-color: var(--custom-primary);
 }
 
 .spinner-ring:nth-child(2) {
@@ -229,6 +231,22 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+/* Circle Reveal Effect */
+.circle-reveal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 0 100px rgba(102, 126, 234, 0.3);
+}
+
+/* Loading Text */
 .loading-text {
   margin-top: 2rem;
   font-size: 1.5rem;
@@ -237,6 +255,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 /* Navigation */

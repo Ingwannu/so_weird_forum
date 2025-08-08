@@ -1,8 +1,9 @@
 // Global Variables
 let currentUser = null;
-let currentTheme = localStorage.getItem('theme') || 'light';
+let currentTheme = localStorage.getItem('theme') || 'dark';
 let categories = [];
 let currentPage = 'home';
+let posts = [];
 
 // API Base URL 설정
 const API_BASE_URL = window.location.origin;
@@ -34,26 +35,60 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         console.log('App initialized successfully');
         
-        // Hide loading screen
+        // Hide loading screen with circle reveal effect
         setTimeout(() => {
             const loadingScreen = document.querySelector('.loading-screen');
             if (loadingScreen) {
+                // Create circle reveal effect
+                const circleReveal = document.createElement('div');
+                circleReveal.className = 'circle-reveal';
+                circleReveal.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    width: 0;
+                    height: 0;
+                    border-radius: 50%;
+                    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, var(--bg-primary) 40%);
+                    transform: translate(-50%, -50%);
+                    z-index: 9999;
+                    pointer-events: none;
+                    box-shadow: 
+                        0 0 100px rgba(102, 126, 234, 0.3),
+                        0 0 200px rgba(245, 87, 108, 0.2),
+                        inset 0 0 120px rgba(102, 126, 234, 0.1);
+                    border: 2px solid rgba(102, 126, 234, 0.2);
+                `;
+                document.body.appendChild(circleReveal);
+                
+                // Start the reveal animation
+                requestAnimationFrame(() => {
+                    circleReveal.style.transition = 'all 1.5s cubic-bezier(0.76, 0, 0.24, 1)';
+                    circleReveal.style.width = '300vmax';
+                    circleReveal.style.height = '300vmax';
+                    circleReveal.style.opacity = '0';
+                });
+                
+                // Fade out loading screen
                 loadingScreen.classList.add('fade-out');
+                
                 setTimeout(() => {
                     loadingScreen.style.display = 'none';
-                }, 500);
+                    if (circleReveal.parentNode) {
+                        circleReveal.remove();
+                    }
+                }, 1500);
             }
         }, 1000);
     } catch (error) {
         console.error('Error initializing app:', error);
-        // Still hide loading screen on error
+        // Force hide loading screen on error
         const loadingScreen = document.querySelector('.loading-screen');
         if (loadingScreen) {
-            loadingScreen.classList.add('fade-out');
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
+            loadingScreen.style.display = 'none';
         }
+        // Show error message
+        showToast('Failed to initialize app. Please refresh the page.', 'error');
     }
 });
 
