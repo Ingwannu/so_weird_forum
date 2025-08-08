@@ -124,10 +124,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // 프테로닥틸 환경에서는 HTTP를 사용하므로 false로 설정
+    secure: 'auto',
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: 'lax' // CORS 요청에서 쿠키가 전송되도록 설정
+    sameSite: 'lax'
   }
 }));
 
