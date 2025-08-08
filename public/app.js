@@ -9,28 +9,52 @@ const API_BASE_URL = window.location.origin;
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', async () => {
-    // Apply saved theme
-    applyTheme(currentTheme);
-    
-    // Initialize mouse glow effect
-    initMouseGlow();
-    
-    // Load user session
-    await loadUserSession();
-    
-    // Load categories
-    await loadCategories();
-    
-    // Setup event listeners
-    setupEventListeners();
-    
-    // Setup router
-    setupRouter();
-    
-    // Hide loading screen
-    setTimeout(() => {
-        document.querySelector('.loading-screen').classList.add('fade-out');
-    }, 1000);
+    try {
+        console.log('Initializing app...');
+        
+        // Apply saved theme
+        applyTheme(currentTheme);
+        
+        // Initialize mouse glow effect
+        initMouseGlow();
+        
+        // Load user session
+        console.log('Loading user session...');
+        await loadUserSession();
+        
+        // Load categories
+        console.log('Loading categories...');
+        await loadCategories();
+        
+        // Setup event listeners
+        setupEventListeners();
+        
+        // Setup router
+        setupRouter();
+        
+        console.log('App initialized successfully');
+        
+        // Hide loading screen
+        setTimeout(() => {
+            const loadingScreen = document.querySelector('.loading-screen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        }, 1000);
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        // Still hide loading screen on error
+        const loadingScreen = document.querySelector('.loading-screen');
+        if (loadingScreen) {
+            loadingScreen.classList.add('fade-out');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }
+    }
 });
 
 // Mouse Glow Effect
@@ -115,10 +139,20 @@ function cycleTheme() {
 // User Session Management
 async function loadUserSession() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/me`);
+        console.log('Fetching user session from:', `${API_BASE_URL}/api/auth/me`);
+        const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        console.log('User session response status:', response.status);
+        
         if (response.ok) {
             const data = await response.json();
             currentUser = data.user;
+            console.log('User loaded:', currentUser);
             updateUserUI();
             
             // Apply user's theme preference
@@ -134,6 +168,7 @@ async function loadUserSession() {
             // Load notifications
             loadNotifications();
         } else {
+            console.log('No user session found');
             updateUserUI();
         }
     } catch (error) {
@@ -204,10 +239,21 @@ function updateUserUI() {
 // Categories Management
 async function loadCategories() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/categories`);
+        console.log('Fetching categories from:', `${API_BASE_URL}/api/categories`);
+        const response = await fetch(`${API_BASE_URL}/api/categories`, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        console.log('Categories response status:', response.status);
+        
         if (response.ok) {
             categories = await response.json();
+            console.log('Categories loaded:', categories);
             updateCategoriesUI();
+        } else {
+            console.error('Failed to load categories, status:', response.status);
         }
     } catch (error) {
         console.error('Failed to load categories:', error);
@@ -286,7 +332,7 @@ async function loadHomePage() {
     
     app.innerHTML = `
         <div class="page-header">
-            <h1 class="page-title">Premium Forum</h1>
+            <h1 class="page-title">Weird Forum</h1>
             <p class="page-subtitle">고품질 커뮤니티에 오신 것을 환영합니다</p>
         </div>
         
