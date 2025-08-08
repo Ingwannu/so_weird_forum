@@ -13,8 +13,31 @@ const compression = require('compression');
 const path = require('path');
 const fs = require('fs').promises;
 
+// 환경변수 로드
+require('dotenv').config();
+
 const app = express();
+
+// 포트 설정 - 프테로닥틸은 SERVER_PORT를 사용
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
+const HOST = process.env.SERVER_IP || process.env.HOST || '0.0.0.0';
+
+// 사이트 설정
+const SITE_URL = process.env.SITE_URL || `http://localhost:${PORT}`;
+const SITE_NAME = process.env.SITE_NAME || 'Premium Forum';
+const SESSION_SECRET = process.env.SESSION_SECRET || 'your-secret-key-change-in-production-' + Math.random();
+const DATABASE_PATH = process.env.DATABASE_PATH || './forum.db';
+
+// 개발자 계정 설정
+const DEV_EMAIL = process.env.DEV_EMAIL || 'ingwannu@gmail.com';
+const DEV_PASSWORD = process.env.DEV_PASSWORD || 'ddkcy1914';
+
+console.log('===== 서버 설정 =====');
+console.log(`포트: ${PORT}`);
+console.log(`호스트: ${HOST}`);
+console.log(`사이트 URL: ${SITE_URL}`);
+console.log(`환경: ${process.env.NODE_ENV || 'development'}`);
+console.log('===================');
 
 // DOMPurify 설정
 const window = new JSDOM('').window;
@@ -51,7 +74,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(session({
-  secret: 'your-secret-key-change-in-production-' + Math.random(),
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -69,7 +92,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // 데이터베이스 초기화
-const db = new sqlite3.Database('./forum.db');
+const db = new sqlite3.Database(DATABASE_PATH);
 
 // 데이터베이스 스키마 생성
 db.serialize(() => {
@@ -182,13 +205,10 @@ db.serialize(() => {
   stmt.finalize();
 
   // 개발자 계정 생성
-  const devEmail = 'ingwannu@gmail.com';
-  const devPassword = 'ddkcy1914';
-  
-  bcrypt.hash(devPassword, 10, (err, hash) => {
+  bcrypt.hash(DEV_PASSWORD, 10, (err, hash) => {
     if (!err) {
       db.run("INSERT OR IGNORE INTO users (username, email, password, role) VALUES (?, ?, ?, ?)",
-        ['Developer', devEmail, hash, 'developer']);
+        ['Developer', DEV_EMAIL, hash, 'developer']);
     }
   });
 });
@@ -1024,7 +1044,7 @@ app.get('*', (req, res) => {
 });
 
 // 서버 시작
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log(`서버가 포트 ${PORT}에서 실행중입니다.`);
   console.log(`http://localhost:${PORT} 에서 포럼에 접속할 수 있습니다.`);
 });
