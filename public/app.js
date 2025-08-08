@@ -10,20 +10,9 @@ const API_BASE_URL = window.location.origin;
 
 // Helper function to hide loading screen
 function hideLoadingScreen() {
-    console.log('hideLoadingScreen() called');
     const loadingScreen = document.querySelector('.loading-screen');
-    console.log('Loading screen element:', loadingScreen);
-    console.log('Loading screen current display:', loadingScreen ? loadingScreen.style.display : 'null');
-    console.log('Loading screen current opacity:', loadingScreen ? loadingScreen.style.opacity : 'null');
-    
-    if (loadingScreen) {
-        // 즉시 숨기기 - 애니메이션 없이
-        console.log('Hiding loading screen immediately...');
-        loadingScreen.style.display = 'none';
-        console.log('Loading screen hidden successfully');
-    } else {
-        console.error('Loading screen element not found!');
-    }
+    if (!loadingScreen) return;
+    loadingScreen.style.display = 'none';
 }
 
 // Initialize App
