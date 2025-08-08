@@ -10,13 +10,22 @@ const API_BASE_URL = window.location.origin;
 
 // Helper function to hide loading screen
 function hideLoadingScreen() {
-    console.log('Hiding loading screen...');
+    console.log('hideLoadingScreen() called');
     const loadingScreen = document.querySelector('.loading-screen');
+    console.log('Loading screen element:', loadingScreen);
+    console.log('Loading screen current display:', loadingScreen ? loadingScreen.style.display : 'null');
+    console.log('Loading screen current opacity:', loadingScreen ? loadingScreen.style.opacity : 'null');
+    
     if (loadingScreen) {
+        console.log('Setting opacity to 0...');
         loadingScreen.style.opacity = '0';
         setTimeout(() => {
+            console.log('Setting display to none...');
             loadingScreen.style.display = 'none';
+            console.log('Loading screen hidden successfully');
         }, 500);
+    } else {
+        console.error('Loading screen element not found!');
     }
 }
 
@@ -25,6 +34,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM Content Loaded - Starting initialization...');
     console.log('Current location:', window.location.href);
     console.log('API Base URL:', API_BASE_URL);
+    
+    // 초기화 시작 시간 기록
+    const startTime = Date.now();
     
     try {
         console.log('Step 1: Applying theme...');
@@ -48,17 +60,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupEventListeners();
         
         console.log('Step 6: Setting up router...');
-        // Setup router
-        setupRouter();
+        // Setup router (this also loads the initial page)
+        await setupRouter();
         
-        console.log('App initialized successfully!');
+        const endTime = Date.now();
+        console.log(`App initialized successfully! Total time: ${endTime - startTime}ms`);
         
-        // Hide loading screen after everything is loaded
+        // Hide loading screen after everything is loaded including the initial page
+        console.log('About to hide loading screen...');
         hideLoadingScreen();
     } catch (error) {
         console.error('Critical error during app initialization:', error);
         console.error('Error stack:', error.stack);
         // Force hide loading screen on error
+        console.log('Force hiding loading screen due to error...');
         hideLoadingScreen();
         // Show error message
         showToast('앱 초기화 중 오류가 발생했습니다. 페이지를 새로고침해주세요.', 'error');
@@ -305,7 +320,9 @@ function updateCategoriesUI() {
 }
 
 // Router
-function setupRouter() {
+async function setupRouter() {
+    console.log('Setting up router...');
+    
     // Handle navigation
     document.addEventListener('click', (e) => {
         if (e.target.matches('a[href^="/"]') || e.target.closest('a[href^="/"]')) {
@@ -322,7 +339,9 @@ function setupRouter() {
     });
     
     // Initial page load
-    loadPage(window.location.pathname);
+    console.log('Loading initial page:', window.location.pathname);
+    await loadPage(window.location.pathname);
+    console.log('Initial page loaded');
 }
 
 function navigateTo(path) {
@@ -331,32 +350,47 @@ function navigateTo(path) {
 }
 
 async function loadPage(path) {
+    console.log(`loadPage called with path: ${path}`);
     const app = document.getElementById('app');
+    
+    if (!app) {
+        console.error('App element not found!');
+        return;
+    }
     
     // Update active nav link
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
     });
     
-    if (path === '/' || path === '/home') {
-        currentPage = 'home';
-        document.querySelector('[data-page="home"]').classList.add('active');
-        await loadHomePage();
-    } else if (path.startsWith('/category/')) {
-        const categorySlug = path.split('/')[2];
-        await loadCategoryPage(categorySlug);
-    } else if (path.startsWith('/post/')) {
-        const postId = path.split('/')[2];
-        await loadPostPage(postId);
-    } else if (path === '/search') {
-        currentPage = 'search';
-        document.querySelector('[data-page="search"]').classList.add('active');
-        await loadSearchPage();
-    } else if (path.startsWith('/profile/')) {
-        const username = path.split('/')[2];
-        await loadProfilePage(username);
-    } else {
-        app.innerHTML = '<div class="text-center p-3"><h2>404 - 페이지를 찾을 수 없습니다</h2></div>';
+    try {
+        if (path === '/' || path === '/home') {
+            currentPage = 'home';
+            const homeLink = document.querySelector('[data-page="home"]');
+            if (homeLink) homeLink.classList.add('active');
+            console.log('Loading home page...');
+            await loadHomePage();
+            console.log('Home page loaded successfully');
+        } else if (path.startsWith('/category/')) {
+            const categorySlug = path.split('/')[2];
+            await loadCategoryPage(categorySlug);
+        } else if (path.startsWith('/post/')) {
+            const postId = path.split('/')[2];
+            await loadPostPage(postId);
+        } else if (path === '/search') {
+            currentPage = 'search';
+            const searchLink = document.querySelector('[data-page="search"]');
+            if (searchLink) searchLink.classList.add('active');
+            await loadSearchPage();
+        } else if (path.startsWith('/profile/')) {
+            const username = path.split('/')[2];
+            await loadProfilePage(username);
+        } else {
+            app.innerHTML = '<div class="text-center p-3"><h2>404 - 페이지를 찾을 수 없습니다</h2></div>';
+        }
+    } catch (error) {
+        console.error('Error loading page:', error);
+        app.innerHTML = '<div class="text-center p-3"><h2>페이지 로드 중 오류가 발생했습니다</h2></div>';
     }
 }
 
@@ -403,16 +437,24 @@ async function loadHomePage() {
 }
 
 async function loadPosts(category = null, page = 1) {
+    console.log(`loadPosts called - category: ${category}, page: ${page}`);
     try {
         let url = `${API_BASE_URL}/api/posts?page=${page}`;
         if (category) {
             url += `&category=${category}`;
         }
         
+        console.log(`Fetching posts from: ${url}`);
         const response = await fetch(url, { credentials: 'same-origin' });
+        console.log(`Posts response status: ${response.status}`);
+        
         if (response.ok) {
             const posts = await response.json();
+            console.log(`Loaded ${posts.length} posts`);
             displayPosts(posts);
+        } else {
+            console.error('Failed to load posts, status:', response.status);
+            showToast('게시글을 불러오는데 실패했습니다.', 'error');
         }
     } catch (error) {
         console.error('Failed to load posts:', error);
@@ -1427,4 +1469,134 @@ async function loadAdminStats() {
         console.error('Failed to load admin stats:', error);
         content.innerHTML = '<p class="text-center text-muted">통계를 불러오는데 실패했습니다.</p>';
     }
+}
+
+// Missing page loaders
+async function loadSearchPage() {
+    const app = document.getElementById('app');
+    app.innerHTML = `
+        <div class="page-header">
+            <h1 class="page-title">검색</h1>
+            <p class="page-subtitle">게시글과 댓글을 검색하세요</p>
+        </div>
+        <div class="search-container">
+            <form onsubmit="handleSearch(event)" class="search-form">
+                <div class="form-group">
+                    <input type="text" class="form-input glass-input" placeholder="검색어를 입력하세요..." required>
+                    <button type="submit" class="btn btn-gradient">
+                        <i class="fas fa-search"></i>
+                        <span>검색</span>
+                    </button>
+                </div>
+            </form>
+            <div id="search-results"></div>
+        </div>
+    `;
+}
+
+async function loadCategoryPage(categorySlug) {
+    const app = document.getElementById('app');
+    const category = categories.find(c => c.slug === categorySlug);
+    
+    if (!category) {
+        app.innerHTML = '<div class="text-center p-3"><h2>카테고리를 찾을 수 없습니다</h2></div>';
+        return;
+    }
+    
+    app.innerHTML = `
+        <div class="page-header">
+            <h1 class="page-title">${category.icon} ${category.name}</h1>
+            <p class="page-subtitle">${category.description || ''}</p>
+        </div>
+        
+        ${currentUser ? `
+            <div class="create-post-card glass-card mb-3">
+                <h3>새 게시글 작성</h3>
+                <button class="btn btn-gradient" onclick="openCreatePostModal()">
+                    <i class="fas fa-pen"></i>
+                    <span>글쓰기</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </div>
+        ` : ''}
+        
+        <div class="posts-section">
+            <div class="section-header">
+                <h2>게시글</h2>
+            </div>
+            <div id="posts-container" class="posts-container">
+                <div class="loading-posts">
+                    <div class="spinner-ring"></div>
+                    <p>게시글을 불러오는 중...</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Load posts for this category
+    await loadPosts(categorySlug);
+}
+
+async function loadProfilePage(username) {
+    const app = document.getElementById('app');
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/users/${username}`, { credentials: 'same-origin' });
+        if (!response.ok) {
+            throw new Error('User not found');
+        }
+        
+        const user = await response.json();
+        
+        app.innerHTML = `
+            <div class="profile-page">
+                <div class="profile-header glass-card">
+                    <div class="profile-info">
+                        ${user.avatar_url ? 
+                            `<img src="${user.avatar_url}" alt="${user.username}" class="profile-avatar">` :
+                            `<div class="profile-avatar" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 3rem;">${user.username[0].toUpperCase()}</div>`
+                        }
+                        <div class="profile-details">
+                            <h1 class="profile-username">${user.username}</h1>
+                            <p class="profile-bio">${user.bio || '소개가 없습니다.'}</p>
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <strong>${user.post_count}</strong>
+                                    <span>게시글</span>
+                                </div>
+                                <div class="stat">
+                                    <strong>${user.comment_count}</strong>
+                                    <span>댓글</span>
+                                </div>
+                                <div class="stat">
+                                    <strong>${user.total_likes || 0}</strong>
+                                    <span>받은 좋아요</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-content">
+                    <h2>최근 게시글</h2>
+                    <div id="user-posts-container">
+                        <p class="text-center text-muted">게시글을 불러오는 중...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // TODO: Load user's posts
+    } catch (error) {
+        console.error('Failed to load profile:', error);
+        app.innerHTML = '<div class="text-center p-3"><h2>사용자를 찾을 수 없습니다</h2></div>';
+    }
+}
+
+// Handle search
+function handleSearch(event) {
+    event.preventDefault();
+    const searchTerm = event.target.querySelector('input').value;
+    // TODO: Implement search functionality
+    console.log('Searching for:', searchTerm);
 }
