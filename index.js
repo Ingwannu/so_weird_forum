@@ -60,22 +60,36 @@ marked.setOptions({
 });
 
 // 미들웨어 설정
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", SITE_URL]
+// 개발 환경에서는 보안 설정 완화
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'", SITE_URL]
+      },
     },
-  },
-}));
+  }));
+} else {
+  // 개발 환경에서는 CSP 비활성화
+  app.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false
+  }));
+}
 
 // CORS 설정
 app.use(cors({
   origin: function(origin, callback) {
+    // 개발 환경에서는 모든 origin 허용
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
     // origin이 없는 경우 (동일 출처 요청)는 항상 허용
     if (!origin) {
       return callback(null, true);
@@ -85,13 +99,9 @@ app.use(cors({
     const allowedOrigins = [
       'http://119.202.156.3:50012',
       'http://localhost:50012',
-      'http://localhost:3000'
+      'http://localhost:3000',
+      SITE_URL
     ];
-    
-    // 개발 환경에서는 모든 origin 허용
-    if (process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
     
     // 프로덕션에서는 허용된 오리진만 허용
     if (allowedOrigins.includes(origin)) {
